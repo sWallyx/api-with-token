@@ -31,34 +31,45 @@ class Todo(db.Model):
     complete = db.Column(db.Boolean)
     user_id = db.Column(db.Integer)
 
-@app.route('/users', methods=['GET'])
+
+@app.route("/users", methods=["GET"])
 def get_all_users():
-    return ''
+    return ""
 
-@app.route('/user/<user_id>', methods=['GET'])
+
+@app.route("/user/<user_id>", methods=["GET"])
 def get_one_user():
-    return ''
+    return ""
 
-@app.route('/user', methods=['POST'])
+
+@app.route("/user", methods=["POST"])
 def create_user():
     data = request.get_json()
 
-    hashed_password = generate_password_hash(data['password'], method='sha256')
+    hashed_password = generate_password_hash(data["password"], method="sha256")
 
-    new_user = User(public_id=str(uuid.uuid4()), name=data['name'], password=hashed_password, admin=False)
+    new_user = User(
+        public_id=str(uuid.uuid4()),
+        name=data["name"],
+        password=hashed_password,
+        admin=False,
+    )
 
     db.session.add(new_user)
     db.session.commit()
-    
-    return jsonify({'message': 'New user created'})
 
-@app.route('/user/<user_id>', methods=['PUT'])
+    return jsonify({"message": "New user created"})
+
+
+@app.route("/user/<user_id>", methods=["PUT"])
 def promote_user():
-    return ''
+    return ""
 
-@app.route('/user/<user_id>', methods=['DELETE'])
+
+@app.route("/user/<user_id>", methods=["DELETE"])
 def delete_user():
-    return ''
+    return ""
+
 
 if __name__ == "__main__":
     app.run(debug=True)
