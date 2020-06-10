@@ -12,6 +12,7 @@ flask-sqlalchemy = "*"
 flask = "*"
 python = "*"
 black = "*"
+werkzeug = "*"
 
 [requires]
 python_version = "3.7"
