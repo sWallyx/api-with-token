@@ -32,7 +32,7 @@ class Todo(db.Model):
     user_id = db.Column(db.Integer)
 
 
-@app.route("/users", methods=["GET"])
+@app.route("/user", methods=["GET"])
 def get_all_users():
 
     users = User.query.all()
