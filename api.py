@@ -3,6 +3,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import uuid
 from werkzeug.security import generate_password_hash, check_password_hash
+import json
 
 app = Flask(__name__)
 
@@ -18,6 +19,13 @@ db = SQLAlchemy(app)
 # We define the tables fort our database, in this case, two tables
 # User table and Todo table
 class User(db.Model):
+    """ 
+        User model with the database schema, it defines how the
+        User table will be.
+
+        Args:
+            db.model {}: Model of the database
+    """
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(50), unique=True)
     name = db.Column(db.String(50))
@@ -26,6 +34,13 @@ class User(db.Model):
 
 
 class Todo(db.Model):
+    """ 
+        Todo model with the database schema, it defines how the
+        Todo table will be.
+
+        Args:
+            db.model {}: Model of the database
+    """
     id = db.Column(db.Integer, primary_key=True)
     text = db.Column(db.String(50))
     complete = db.Column(db.Boolean)
@@ -33,8 +48,16 @@ class Todo(db.Model):
 
 
 @app.route("/user", methods=["GET"])
-def get_all_users():
+def get_all_users() -> json:
+    """
+        GET endpoint to get all users of the database
 
+        Usage:
+            http://{{domain}}/user
+
+        Returns:
+            json: Object with the response
+    """
     users = User.query.all()
 
     output = []
@@ -51,7 +74,7 @@ def get_all_users():
 
 
 @app.route("/user/<public_id>", methods=["GET"])
-def get_one_user(public_id):
+def get_one_user(public_id: str) -> json:
 
     user = User.query.filter_by(public_id=public_id).first()
 
@@ -68,7 +91,7 @@ def get_one_user(public_id):
 
 
 @app.route("/user", methods=["POST"])
-def create_user():
+def create_user() -> json:
     data = request.get_json()
 
     hashed_password = generate_password_hash(data["password"], method="sha256")
@@ -87,7 +110,7 @@ def create_user():
 
 
 @app.route("/user/<public_id>", methods=["PUT"])
-def promote_user(public_id):
+def promote_user(public_id: str) -> json:
 
     user = User.query.filter_by(public_id=public_id).first()
 
@@ -101,7 +124,7 @@ def promote_user(public_id):
 
 
 @app.route("/user/<public_id>", methods=["DELETE"])
-def delete_user(public_id):
+def delete_user(public_id: str) -> json:
 
     user = User.query.filter_by(public_id=public_id).first()
 
