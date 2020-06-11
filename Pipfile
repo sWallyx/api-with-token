@@ -10,9 +10,9 @@ black = "*"
 sqlalchemy = "*"
 flask-sqlalchemy = "*"
 flask = "*"
-python = "*"
 black = "*"
 werkzeug = "*"
+flask-jwt = "*"
 
 [requires]
 python_version = "3.7"
