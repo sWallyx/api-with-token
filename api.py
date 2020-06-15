@@ -109,7 +109,7 @@ def get_all_users(current_user) -> json:
 def get_one_user(current_user, public_id: str) -> json:
 
     if not current_user.admin:
-        return jsonify({"message":"Cannon perform that function!"})
+        return jsonify({"message": "Cannon perform that function!"})
 
     user = User.query.filter_by(public_id=public_id).first()
 
@@ -130,7 +130,7 @@ def get_one_user(current_user, public_id: str) -> json:
 def create_user(current_user) -> json:
 
     if not current_user.admin:
-        return jsonify({"message":"Cannot perform that function!"})
+        return jsonify({"message": "Cannot perform that function!"})
 
     data = request.get_json()
 
@@ -154,7 +154,7 @@ def create_user(current_user) -> json:
 def promote_user(current_user, public_id: str) -> json:
 
     if not current_user.admin:
-        return jsonify({"message":"Cannot perform that function!"})
+        return jsonify({"message": "Cannot perform that function!"})
 
     user = User.query.filter_by(public_id=public_id).first()
 
@@ -172,7 +172,7 @@ def promote_user(current_user, public_id: str) -> json:
 def delete_user(current_user, public_id: str) -> json:
 
     if not current_user.admin:
-        return jsonify({"message":"Cannot perform that function!"})
+        return jsonify({"message": "Cannot perform that function!"})
 
     user = User.query.filter_by(public_id=public_id).first()
 
