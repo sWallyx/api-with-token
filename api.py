@@ -108,6 +108,9 @@ def get_all_users(current_user) -> json:
 @token_required
 def get_one_user(current_user, public_id: str) -> json:
 
+    if not current_user.admin:
+        return jsonify({"message":"Cannon perform that function!"})
+
     user = User.query.filter_by(public_id=public_id).first()
 
     if not user:
@@ -125,6 +128,10 @@ def get_one_user(current_user, public_id: str) -> json:
 @app.route("/user", methods=["POST"])
 @token_required
 def create_user(current_user) -> json:
+
+    if not current_user.admin:
+        return jsonify({"message":"Cannot perform that function!"})
+
     data = request.get_json()
 
     hashed_password = generate_password_hash(data["password"], method="sha256")
@@ -146,6 +153,9 @@ def create_user(current_user) -> json:
 @token_required
 def promote_user(current_user, public_id: str) -> json:
 
+    if not current_user.admin:
+        return jsonify({"message":"Cannot perform that function!"})
+
     user = User.query.filter_by(public_id=public_id).first()
 
     if not user:
@@ -160,6 +170,9 @@ def promote_user(current_user, public_id: str) -> json:
 @app.route("/user/<public_id>", methods=["DELETE"])
 @token_required
 def delete_user(current_user, public_id: str) -> json:
+
+    if not current_user.admin:
+        return jsonify({"message":"Cannot perform that function!"})
 
     user = User.query.filter_by(public_id=public_id).first()
 
