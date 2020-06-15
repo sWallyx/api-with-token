@@ -6,6 +6,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import jwt
 import datetime
+from functools import wraps
 
 app = Flask(__name__)
 
@@ -50,9 +51,29 @@ class Todo(db.Model):
     complete = db.Column(db.Boolean)
     user_id = db.Column(db.Integer)
 
+def token_required(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        if "x-access-token" in request.headers:
+            token = request.headers["x-access-token"]
+        
+        if not token:
+            return jsonify({"message": "Token is missing!"}), 401
+
+        try:
+            data = jwt.decode(token, app.config["SECRET_KEY"])
+            current_user = User.query.filter_by(public_id=data["public_id"]).first()
+        except:
+            return jsonify({"message": "Token is invalid!"}), 401
+        
+        return f(current_user, *args, **kwargs)
+    
+    return decorated
 
 @app.route("/user", methods=["GET"])
-def get_all_users() -> json:
+@token_required
+def get_all_users(current_user) -> json:
     """
         GET endpoint to get all users of the database
 
@@ -78,7 +99,8 @@ def get_all_users() -> json:
 
 
 @app.route("/user/<public_id>", methods=["GET"])
-def get_one_user(public_id: str) -> json:
+@token_required
+def get_one_user(current_user, public_id: str) -> json:
 
     user = User.query.filter_by(public_id=public_id).first()
 
@@ -95,7 +117,8 @@ def get_one_user(public_id: str) -> json:
 
 
 @app.route("/user", methods=["POST"])
-def create_user() -> json:
+@token_required
+def create_user(current_user) -> json:
     data = request.get_json()
 
     hashed_password = generate_password_hash(data["password"], method="sha256")
@@ -114,7 +137,8 @@ def create_user() -> json:
 
 
 @app.route("/user/<public_id>", methods=["PUT"])
-def promote_user(public_id: str) -> json:
+@token_required
+def promote_user(current_user, public_id: str) -> json:
 
     user = User.query.filter_by(public_id=public_id).first()
 
@@ -128,7 +152,8 @@ def promote_user(public_id: str) -> json:
 
 
 @app.route("/user/<public_id>", methods=["DELETE"])
-def delete_user(public_id: str) -> json:
+@token_required
+def delete_user(current_user, public_id: str) -> json:
 
     user = User.query.filter_by(public_id=public_id).first()
 
