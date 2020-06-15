@@ -51,13 +51,14 @@ class Todo(db.Model):
     complete = db.Column(db.Boolean)
     user_id = db.Column(db.Integer)
 
+
 def token_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = None
         if "x-access-token" in request.headers:
             token = request.headers["x-access-token"]
-        
+
         if not token:
             return jsonify({"message": "Token is missing!"}), 401
 
@@ -66,10 +67,11 @@ def token_required(f):
             current_user = User.query.filter_by(public_id=data["public_id"]).first()
         except:
             return jsonify({"message": "Token is invalid!"}), 401
-        
+
         return f(current_user, *args, **kwargs)
-    
+
     return decorated
+
 
 @app.route("/user", methods=["GET"])
 @token_required
