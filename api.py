@@ -83,6 +83,10 @@ def get_all_users(current_user) -> json:
         Returns:
             json: Object with the response
     """
+
+    if not current_user.admin:
+        return jsonify({"message": "Cannot perform that function!"})
+
     users = User.query.all()
 
     output = []
