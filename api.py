@@ -220,25 +220,31 @@ def login():
         "Could not verify", 401, {"WWW-Authenticate": "Basic real='Login required!'"},
     )
 
+
 @app.route("/todo", methods=["GET"])
 def get_all_todos():
     return ""
+
 
 @app.route("/todo/<todo_id>", methods=["GET"])
 def get_one_todo(todo_id):
     return ""
 
+
 @app.route("/todo", methods=["POST"])
 def create_todo():
     return ""
+
 
 @app.route("/todo/<todo_id>", methods=["PUT"])
 def complete_todo(todo_id):
     return ""
 
+
 @app.route("/todo/<todo_id>", methods=["DELETE"])
 def delete_todo():
     return ""
+
 
 if __name__ == "__main__":
     app.run(debug=True)
