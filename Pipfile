@@ -13,6 +13,7 @@ flask = "*"
 black = "*"
 werkzeug = "*"
 flask-jwt = "*"
+isort = "*"
 
 [requires]
 python_version = "3.7"
